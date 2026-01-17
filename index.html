@@ -21,7 +21,7 @@
             <!-- Step 0: Invite Code -->
             <div class="accordion-item">
                 <div class="accordion-header">
-                    <span>Step 0 - Never forget you're Invite Code</span>
+                    <span data-i18n="step0_title">Step 0 - Never forget you're Invite Code</span>
                     <span class="accordion-icon">▼</span>
                 </div>
                 <div class="accordion-content open">
@@ -37,7 +37,7 @@
             <!-- Step 1: Planets -->
             <div class="accordion-item">
                 <div class="accordion-header">
-                    <span>Step 1 - O.S.C.A.R. Planets Tracker</span>
+                    <span data-i18n="step1_title">Step 1 - O.S.C.A.R. Planets Tracker</span>
                     <span class="accordion-icon">▼</span>
                 </div>
                 <div class="accordion-content">
@@ -52,14 +52,14 @@
             <!-- Step 2: Mars Code -->
             <div class="accordion-item">
                 <div class="accordion-header">
-                    <span>Step 2 - Mars coordinate code "Déc"</span>
+                    <span data-i18n="step2_title">Step 2 - Mars coordinate code "Déc"</span>
                     <span class="accordion-icon">▼</span>
                 </div>
                 <div class="accordion-content">
                     <div class="content-padding">
 
                         <div class="dec-inline-wrapper">
-                            <span class="dec-label">DÉC</span>
+                            <span class="dec-label" data-i18n="dec_label">DÉC</span>
                             <input type="number" class="dec-input-small" id="dec-1" min="0" max="99" placeholder="00">
                             <span class="dec-symbol">°</span>
                             <input type="number" class="dec-input-small" id="dec-2" min="0" max="99" placeholder="00">
@@ -77,12 +77,12 @@
             <!-- Step 3: Books -->
             <div class="accordion-item">
                 <div class="accordion-header">
-                    <span>Step 3 - Books</span>
+                    <span data-i18n="step3_title">Step 3 - Books</span>
                     <span class="accordion-icon">▼</span>
                 </div>
                 <div class="accordion-content">
                     <div class="content-padding">
-                        <span style="color: #666; font-style: italic;">Wait Data ...</span>
+                        <span style="color: #666; font-style: italic;" data-i18n="wait_data">Wait Data ...</span>
                     </div>
                 </div>
             </div>
@@ -90,7 +90,7 @@
             <!-- Step 4: Planets Coordinate -->
             <div class="accordion-item">
                 <div class="accordion-header">
-                    <span>Step 4 - Planets Coordinate</span>
+                    <span data-i18n="step4_title">Step 4 - Planets Coordinate</span>
                     <span class="accordion-icon">▼</span>
                 </div>
                 <div class="accordion-content">
@@ -128,7 +128,7 @@
             <!-- Step 5: Orgue Order -->
             <div class="accordion-item">
                 <div class="accordion-header">
-                    <span>Step 5 - Orgue Order</span>
+                    <span data-i18n="step5_title">Step 5 - Orgue Order</span>
                     <span class="accordion-icon">▼</span>
                 </div>
                 <div class="accordion-content">
@@ -146,9 +146,11 @@
                         </div>
                         <div style="display: flex; gap: 10px; margin-top: 15px; justify-content: center;">
                             <button class="btn-ui" id="btn-reset-orgue"
-                                style="width: auto; background: var(--accent-red);">Reset Order</button>
+                                style="width: auto; background: var(--accent-red);" data-i18n="btn_reset_order">Reset
+                                Order</button>
                             <button class="btn-ui" id="btn-show-map"
-                                style="width: auto; background: var(--accent-purple);">Show Map Order</button>
+                                style="width: auto; background: var(--accent-purple);" data-i18n="btn_show_map">Show Map
+                                Order</button>
                         </div>
                     </div>
                 </div>
@@ -158,10 +160,10 @@
     </div>
 
     <div id="bottom-menu">
-        <div class="menu-toggle-btn" id="menu-toggle-btn">Options Menu ▲</div>
+        <div class="menu-toggle-btn" id="menu-toggle-btn" data-i18n="options_menu">Options Menu ▲</div>
         <div class="menu-content">
-            <button class="btn-ui" id="btn-credits">Credits</button>
-            <button class="btn-ui" id="btn-reset-all">Reset All</button>
+            <button class="btn-ui" id="btn-credits" data-i18n="btn_credits">Credits</button>
+            <button class="btn-ui" id="btn-reset-all" data-i18n="btn_reset_all">Reset All</button>
         </div>
     </div>
 
@@ -169,7 +171,7 @@
         <div class="modal-box">
             <div class="modal-title" id="modal-title">Title</div>
             <div class="modal-text" id="modal-content"></div>
-            <button class="btn-modal-close" id="btn-modal-close">Close</button>
+            <button class="btn-modal-close" id="btn-modal-close" data-i18n="btn_close">Close</button>
         </div>
     </div>
 
@@ -180,7 +182,8 @@
                     style="width: 100%; display: block; border-radius: 4px;">
                 <canvas id="map-canvas" style="position: absolute; top: 0; left: 0; pointer-events: none;"></canvas>
             </div>
-            <button class="btn-modal-close" id="btn-map-close" style="width: 100%; margin-top: 5px;">Close</button>
+            <button class="btn-modal-close" id="btn-map-close" style="width: 100%; margin-top: 5px;"
+                data-i18n="btn_close">Close</button>
         </div>
     </div>
 
@@ -192,11 +195,17 @@
                 <div id="statue-markers-container"
                     style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></div>
             </div>
-            <button class="btn-modal-close" id="btn-statue-map-close"
-                style="width: 100%; margin-top: 5px;">Close</button>
+            <button class="btn-modal-close" id="btn-statue-map-close" style="width: 100%; margin-top: 5px;"
+                data-i18n="btn_close">Close</button>
         </div>
     </div>
 
+    <!-- Language Selector -->
+    <div id="lang-container">
+        <div class="lang-menu" id="lang-menu">
+        </div>
+        <button class="lang-btn" id="lang-btn">🌐</button>
+    </div>
 
     <script src="scripts/index.js"></script>
 </body>
