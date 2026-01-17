@@ -45,7 +45,7 @@ function saveData() {
 		step5: {},
 	};
 
-	const books = document.querySelectorAll('#step3-container .book-btn');
+	const books = document.querySelectorAll('#step3-container .book-item');
 	books.forEach((btn, index) => {
 		if (btn.getAttribute('data-selected') === 'true') {
 			state.step3.push(index);
@@ -127,15 +127,13 @@ function loadData() {
 		if (state.step3 && Array.isArray(state.step3)) {
 			statueCounts = { 1: 0, 2: 0, 3: 0 };
 			const books = document.querySelectorAll(
-				'#step3-container .book-btn',
+				'#step3-container .book-item',
 			);
 
 			books.forEach((btn, index) => {
 				if (state.step3.includes(index)) {
 					btn.setAttribute('data-selected', 'true');
-					btn.style.borderColor = 'var(--accent-green)';
-					btn.style.backgroundColor = 'rgba(39, 174, 96, 0.2)';
-					btn.style.color = '#fff';
+					btn.classList.add('selected'); // Ajout de la classe visuelle
 
 					const statId = btn.getAttribute('data-statue-id');
 					if (statId) updateStatueCount(statId, 1);
@@ -345,7 +343,7 @@ function updateDec() {
 	saveData();
 }
 
-/* --- Step 3: Books Logic --- */
+/* --- Step 3: Books & Statue Map Logic --- */
 const bookData = [
 	{ title: 'The Musica Universalis', statueId: 1 },
 	{ title: 'The Black Veil', statueId: 1 },
@@ -358,111 +356,127 @@ const bookData = [
 	{ title: 'Pyramids of cydonia', statueId: 3 },
 ];
 
+const statueCoords = {
+	1: { x: 619, y: 763, anchor: 'bottom-right' },
+	2: { x: 685, y: 325, anchor: 'top-left' },
+	3: { x: 955, y: 763, anchor: 'bottom-right' },
+};
+
 let statueCounts = { 1: 0, 2: 0, 3: 0 };
 
 function initBooks() {
-	const accordions = document.querySelectorAll('.accordion-item');
-	if (accordions.length < 4) return;
-
-	const container = accordions[3].querySelector('.content-padding');
+	const container =
+		document.getElementById('step3-container') ||
+		document.querySelector('.accordion-item:nth-child(4) .content-padding');
 	if (!container) return;
 
+	container.id = 'step3-container';
 	container.innerHTML = '';
 
-	container.id = 'step3-container';
-
 	const booksGrid = document.createElement('div');
-	booksGrid.style.cssText =
-		'display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 20px; width: 100%;';
+	booksGrid.className = 'books-grid';
 
 	bookData.forEach((book, index) => {
-		const btn = document.createElement('div');
-		btn.textContent = book.title.toUpperCase();
-		btn.setAttribute('data-selected', 'false');
-		btn.setAttribute('data-statue-id', book.statueId);
-		btn.classList.add('book-btn');
+		const item = document.createElement('div');
+		item.className = 'book-item';
 
-		btn.style.cssText =
-			'background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); padding: 8px 10px; border-radius: 4px; cursor: pointer; font-size: 10px; color: #ccc; transition: all 0.2s; text-align: center; flex: 1 1 30%; display: flex; align-items: center; justify-content: center; min-width: 120px;';
+		const imgIndex = index + 1;
 
-		btn.onmouseover = () => {
-			if (btn.getAttribute('data-selected') === 'false') {
-				btn.style.background = 'rgba(255,255,255,0.15)';
-			}
-		};
-		btn.onmouseout = () => {
-			if (btn.getAttribute('data-selected') === 'false') {
-				btn.style.background = 'rgba(255,255,255,0.05)';
-			}
-		};
+		item.setAttribute('data-selected', 'false');
+		item.setAttribute('data-statue-id', book.statueId);
+		item.setAttribute('data-index', index);
 
-		btn.addEventListener('click', () => {
-			const isSelected = btn.getAttribute('data-selected') === 'true';
+		const img = document.createElement('img');
+		img.src = `public/imgs/books/${imgIndex}.png`;
+		img.alt = book.title;
+
+		item.appendChild(img);
+
+		item.addEventListener('click', () => {
+			const isSelected = item.getAttribute('data-selected') === 'true';
 
 			if (!isSelected) {
-				btn.setAttribute('data-selected', 'true');
-				btn.style.borderColor = 'var(--accent-green)';
-				btn.style.backgroundColor = 'rgba(39, 174, 96, 0.2)';
-				btn.style.color = '#fff';
+				item.setAttribute('data-selected', 'true');
+				item.classList.add('selected');
 				updateStatueCount(book.statueId, 1);
 			} else {
-				btn.setAttribute('data-selected', 'false');
-				btn.style.borderColor = 'rgba(255,255,255,0.15)';
-				btn.style.backgroundColor = 'rgba(255,255,255,0.05)';
-				btn.style.color = '#ccc';
+				item.setAttribute('data-selected', 'false');
+				item.classList.remove('selected');
 				updateStatueCount(book.statueId, -1);
 			}
 			saveData();
 		});
 
-		booksGrid.appendChild(btn);
+		booksGrid.appendChild(item);
 	});
 
+	const btnMap = document.createElement('button');
+	btnMap.className = 'btn-ui';
+	btnMap.id = 'btn-show-statue-map';
+	btnMap.style.cssText =
+		'background: var(--accent-orange); margin-top: 5px; justify-content: center; width: 100%;';
+	btnMap.textContent = 'Show Statue Map';
+	btnMap.onclick = openStatueMap;
+
 	container.appendChild(booksGrid);
-
-	const statuesWrapper = document.createElement('div');
-	statuesWrapper.style.cssText =
-		'display: flex; gap: 15px; justify-content: space-around; width: 100%; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px;';
-
-	for (let i = 1; i <= 3; i++) {
-		const statBox = document.createElement('div');
-		statBox.style.cssText =
-			'display: flex; flex-direction: column; align-items: center; gap: 5px;';
-
-		const label = document.createElement('span');
-		label.textContent = `STATUE ${i}`;
-		label.style.cssText =
-			'font-size: 10px; color: #888; letter-spacing: 1px; font-weight: bold;';
-
-		const count = document.createElement('div');
-		count.id = `statue-count-${i}`;
-		count.textContent = '0';
-		count.style.cssText =
-			'font-size: 20px; font-weight: bold; color: var(--accent-blue); background: rgba(0,0,0,0.3); padding: 5px 15px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); min-width: 50px; text-align: center;';
-
-		statBox.appendChild(label);
-		statBox.appendChild(count);
-		statuesWrapper.appendChild(statBox);
-	}
-
-	container.appendChild(statuesWrapper);
+	container.appendChild(btnMap);
 }
 
 function updateStatueCount(id, change) {
-	statueCounts[id] += change;
-	if (statueCounts[id] < 0) statueCounts[id] = 0;
+	statueCounts[id] = Math.max(0, statueCounts[id] + change);
+	updateStatueMarkers();
+}
 
-	const el = document.getElementById(`statue-count-${id}`);
-	if (el) {
-		el.textContent = statueCounts[id];
-		el.style.transform = 'scale(1.2)';
-		el.style.color = 'var(--accent-green-hover)';
-		setTimeout(() => {
-			el.style.transform = 'scale(1)';
-			el.style.color = 'var(--accent-blue)';
-		}, 150);
+function openStatueMap() {
+	const overlay = document.getElementById('statue-modal-overlay');
+	overlay.style.display = 'flex';
+	setTimeout(() => {
+		overlay.classList.add('show');
+		updateStatueMarkers();
+	}, 10);
+}
+
+function updateStatueMarkers() {
+	const container = document.getElementById('statue-markers-container');
+	const img = document.getElementById('statue-map-image');
+
+	if (!container || !img || img.clientWidth === 0) return;
+
+	container.innerHTML = '';
+	const scale = img.clientWidth / 1080;
+
+	for (let id in statueCoords) {
+		const coord = statueCoords[id];
+
+		const marker = document.createElement('div');
+		marker.className = 'statue-marker';
+		const count = statueCounts[id];
+		const s = count > 1 ? 's' : '';
+		marker.textContent = `Click ${count} time${s}`;
+
+		const posX = coord.x * scale;
+		const posY = coord.y * scale;
+
+		marker.style.left = posX + 'px';
+		marker.style.top = posY + 'px';
+
+		marker.style.fontSize = Math.max(10, 12 * scale) + 'px';
+
+		if (coord.anchor === 'bottom-right') {
+			marker.classList.add('arrow-br');
+		} else {
+			marker.classList.add('arrow-tl');
+		}
+
+		container.appendChild(marker);
 	}
 }
+
+document.getElementById('btn-statue-map-close').onclick = () => {
+	const overlay = document.getElementById('statue-modal-overlay');
+	overlay.classList.remove('show');
+	setTimeout(() => (overlay.style.display = 'none'), 300);
+};
 
 /* --- Step 4: Directions Logic --- */
 const directions = ['NW', 'SW', 'NE'];
