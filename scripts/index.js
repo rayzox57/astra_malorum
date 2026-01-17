@@ -12,7 +12,7 @@ const translations = {
 		step3_title: 'Step 3 - Books',
 		wait_data: 'Wait Data ...',
 		step4_title: 'Step 4 - Planets Coordinate',
-		step5_title: 'Step 5 - Orgue Order',
+		step5_title: 'Step 5 - Organ Order',
 		btn_reset_order: 'Reset Order',
 		btn_show_map: 'Show Map Order',
 		options_menu: 'Options Menu ▲',
